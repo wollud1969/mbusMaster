@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration debug="false">
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
+    </Console>
+    <File name="FileAppender" fileName="/tmp/mqttMBusConverter.log">
+      <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="debug">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="FileAppender"/>
+    </Root>
+  </Loggers>
+</Configuration>

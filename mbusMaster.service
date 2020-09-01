@@ -1,0 +1,18 @@
+[Unit]
+Description=mqttMBusConverter
+Wants=network-online.target
+After=network-online.target
+
+
+[Service]
+Type=simple
+GuessMainPID=yes
+ExecStart=/usr/bin/java -jar mqttMBusConverter-1.0-SNAPSHOT-jar-with-dependencies.jar
+ExecStop=kill -SIGINT $mainpid
+Restart=on-failure
+WorkingDirectory=/opt/services/mqttMBusConverter
+
+[Install]
+Alias=mqttmbusconverter
+WantedBy=multi-user.target
+
