@@ -99,6 +99,10 @@ public class MbusgwChild {
 		int responseCode = Byte.toUnsignedInt(header[0]);
     int responseLen = Byte.toUnsignedInt(header[1]);
     logger.debug("n: " + n + ", h: " + responseCode + ", l: " + responseLen);
+    if (responseCode != 0) {
+      logger.debug("Received error from child: " + responseCode);
+      throw new MbusgwChildException("Error " + responseCode + " from child");
+    }
 		byte[] frame = new byte[responseLen];
     n = this.processInput.read(frame, 0, responseLen);
     logger.debug("frame completely read");
