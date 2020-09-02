@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,13 @@ public class MbusgwChild {
 	public void start() throws IOException {
 		logger.info("InterfaceChild starting");
 
-		ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/mbusgw", "-l", "-v");
+    ArrayList<String> arguments = new ArrayList<>();
+    arguments.add("/usr/local/bin/mbusgw");
+    arguments.add("-l");
+    if (this.verbose) {
+      arguments.add("-v");
+    }
+		ProcessBuilder pb = new ProcessBuilder(arguments);
 		this.mbusgwProcess = pb.start();
 		logger.debug("Process started");
 

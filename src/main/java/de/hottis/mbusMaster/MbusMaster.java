@@ -22,7 +22,7 @@ public class MbusMaster {
 		logger.debug("Configuration loaded");
 		*/
 
-		MbusgwChild mbusgw = new MbusgwChild(true);
+		MbusgwChild mbusgw = new MbusgwChild(false);
 		mbusgw.start();
 
 

@@ -4,7 +4,7 @@
     <Console name="ConsoleAppender" target="SYSTEM_OUT">
       <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
     </Console>
-    <File name="FileAppender" fileName="/tmp/mqttMBusConverter.log">
+    <File name="FileAppender" fileName="/tmp/mbusmaster.log">
       <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
     </File>
   </Appenders>
