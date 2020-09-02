@@ -63,9 +63,10 @@ public class MbusgwChild {
     logger.debug("stderrToLog thread started");
   }
 
-  public void stop() throws InterruptedException {
+  public void stop() throws InterruptedException, IOException {
     logger.info("About to stop mbusgw child process");
-    this.mbusgwProcess.destroy();
+    this.sendRequest((byte)0, (byte)0);
+    // this.mbusgwProcess.destroy();
     this.mbusgwProcess.waitFor();
     logger.info("Process stopped");
 
