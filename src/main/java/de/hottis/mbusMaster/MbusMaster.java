@@ -1,10 +1,5 @@
 package de.hottis.mbusMaster;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,40 +22,20 @@ public class MbusMaster {
 		logger.debug("Configuration loaded");
 		*/
 
-		ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/mbusgw", "-l", "-v");
-		pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-		Process p = pb.start();
-		System.out.println("Process started");
+		MbusgwChild mbusgw = new MbusgwChild(true);
+		mbusgw.start();
 
 
+		mbusgw.sendRequest((byte)0x5b, (byte)80);
 
-		InputStream i = p.getInputStream();
-		OutputStream o = p.getOutputStream();
-		System.out.println("Streams collected");
-
-		byte[] b = { 0x5b, 80 };
-
-		o.write(b);
-		System.out.println("Data written");
-
-		o.flush();
-		System.out.println("Data flushed");
-
-
-		byte[] header = new byte[2];
-		int n = i.read(header, 0, 2);
-		int responseCode = Byte.toUnsignedInt(header[0]);
-		int responseLen = Byte.toUnsignedInt(header[1]);
-		System.out.println("n: " + n + ", h: " + responseCode + ", l: " + responseLen);
-
-		byte[] frame = new byte[responseLen];
-		n = i.read(frame, 0, responseLen);
+		byte[] frame = mbusgw.collectResponse();
 		for (byte x : frame) {
 			System.out.print(Integer.toHexString(Byte.toUnsignedInt(x)) + " ");
 		}
 		System.out.println();
 
-
+		System.out.println("Stopping mbusgw process");
+		mbusgw.stop();
 
 	}		
 }

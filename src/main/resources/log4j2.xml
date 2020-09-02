@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration debug="false">
+<Configuration debug="true">
   <Appenders>
     <Console name="ConsoleAppender" target="SYSTEM_OUT">
       <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
