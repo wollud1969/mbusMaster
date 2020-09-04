@@ -3,13 +3,14 @@
   <Appenders>
     <Console name="ConsoleAppender" target="SYSTEM_OUT">
       <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
+      <ThresholdFilter level="warn"/>
     </Console>
     <File name="FileAppender" fileName="/tmp/mbusmaster.log">
       <PatternLayout pattern="%d [%t, %F, %L] %-5level - %msg%n%throwable"/> 
     </File>
   </Appenders>
   <Loggers>
-    <Root level="error">
+    <Root level="debug">
       <AppenderRef ref="ConsoleAppender"/>
       <AppenderRef ref="FileAppender"/>
     </Root>
