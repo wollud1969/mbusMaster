@@ -30,7 +30,7 @@ public class MbusMaster {
     	}));
 		logger.debug("Shutdown hook added");
 		*/
-		
+
 		MbusgwChild mbusgw = new MbusgwChild(false);
 		mbusgw.start();
 
@@ -51,7 +51,7 @@ public class MbusMaster {
 					}
 					System.out.println();
 				} catch (IOException e) {
-					logger.error("Error " + e.toString() + ", " + e.getMessage() + " in Meterbus dialog for device " + device);
+					logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device);
 				}
 			}
 			// if (cnt >= 10) {
