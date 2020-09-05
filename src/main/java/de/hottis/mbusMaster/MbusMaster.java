@@ -31,14 +31,16 @@ public class MbusMaster {
 		logger.debug("Shutdown hook added");
 		*/
 
-		MbusgwChild mbusgw = new MbusgwChild(false);
+		MbusgwChild mbusgw = new MbusgwChild(true);
 		mbusgw.start();
 
-		byte[] devices = { (byte)80, (byte)81, (byte)82, (byte)83, (byte)84, (byte)85, (byte)86, (byte)87 };
+		byte[] devices = { (byte)84, (byte)87, (byte)82, (byte)83, (byte)80, (byte)85, (byte)86, (byte)81 };
 
 		int cnt = 0;
+		int errCnt = 0;
+		int successCnt = 0;
 		while (! stopSignal) {
-			System.out.println("--- " + cnt + " ----------------------------------------------------");
+			System.out.println("--- " + cnt + " - " + successCnt + " - " + errCnt + " ---------------------------------------------------");
 			cnt++;
 			for (byte device : devices) {
 				System.out.println("Querying device " + device);
@@ -50,14 +52,16 @@ public class MbusMaster {
 						System.out.print(Integer.toHexString(Byte.toUnsignedInt(x)) + " ");
 					}
 					System.out.println();
+					successCnt++;
 				} catch (IOException e) {
+					errCnt++;
 					logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device);
 				}
 			}
 			// if (cnt >= 10) {
 			//	break;
 			//}
-			Thread.sleep(15*1000);
+			Thread.sleep(5*1000);
 		}
 
 		logger.info("Stopping mbusgw process");
