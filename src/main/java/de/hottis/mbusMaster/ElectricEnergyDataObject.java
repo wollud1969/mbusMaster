@@ -7,7 +7,7 @@ public class ElectricEnergyDataObject extends ADataObject {
 	static final String ENERGY_KEY = "energy";
 	static final String POWER_KEY = "power";
 	static final String TABLE_NAME = "ElectricEnergy";
-        static final String KIND_NAME = "ElectricEnergy";
+  static final String KIND_NAME = "ElectricEnergy";
 	
 	public ElectricEnergyDataObject(String name, double energy, double power) {
 		super(name, KIND_NAME);
