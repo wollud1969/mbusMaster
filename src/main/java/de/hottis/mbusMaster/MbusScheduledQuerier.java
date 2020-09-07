@@ -16,9 +16,9 @@ public class MbusScheduledQuerier extends Thread {
   private ArrayList<MbusDevice> devices;
   private boolean stopSignal = false;
   private ConfigProperties config;
-  private BlockingQueue<String> queue;
+  private BlockingQueue<ADataObject> queue;
 
-  public MbusScheduledQuerier(ConfigProperties config, BlockingQueue<String> queue) {
+  public MbusScheduledQuerier(ConfigProperties config, BlockingQueue<ADataObject> queue) {
     super("MbusScheduledQuerier");
 
     this.config = config;
@@ -58,7 +58,7 @@ public class MbusScheduledQuerier extends Thread {
             device.parse(frame);
 
             logger.info("Got: " + device.toString());
-            this.queue.add(device.toString());
+            this.queue.add(device.getDataObject());
             
             successCnt++;
           } catch (IOException e) {

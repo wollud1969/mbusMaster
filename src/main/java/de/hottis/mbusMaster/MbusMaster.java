@@ -30,7 +30,7 @@ public class MbusMaster {
 		logger.debug("Shutdown hook added");
 		*/
 
-		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		LinkedBlockingQueue<ADataObject> queue = new LinkedBlockingQueue<>();
 
 
 		MbusScheduledQuerier querier = new MbusScheduledQuerier(config, queue);

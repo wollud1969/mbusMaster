@@ -8,9 +8,9 @@ import org.apache.logging.log4j.Logger;
 public class DummyDequeuer extends Thread {
 	static final Logger logger = LogManager.getRootLogger();
 
-  private BlockingQueue<String> queue;
+  private BlockingQueue<ADataObject> queue;
 
-  public DummyDequeuer(BlockingQueue<String> queue) {
+  public DummyDequeuer(BlockingQueue<ADataObject> queue) {
     super("DummyDequeuer");
 
     this.queue = queue;
@@ -19,8 +19,8 @@ public class DummyDequeuer extends Thread {
   public void run() {
     while(true) {
       try {
-        String o = this.queue.take();
-        System.out.println("DummyDequeuer: " + o);
+        ADataObject o = this.queue.take();
+        System.out.println("DummyDequeuer: " + o.toString());
       } catch (InterruptedException e) {
       }
     }

@@ -108,4 +108,6 @@ abstract public class MbusDevice {
     }
     throw new MbusException("dataPoint " + dataPointName + " in getValue not found");
   }
+
+  abstract public ADataObject getDataObject() throws MbusException;
 }
