@@ -35,48 +35,45 @@ public class MbusMaster {
 		logger.debug("Shutdown hook added");
 		*/
 
-		MbusgwChild mbusgw = new MbusgwChild(true);
+		MbusgwChild mbusgw = new MbusgwChild(false);
 		mbusgw.start();
 
-		byte[] devices = { (byte)84, (byte)87, (byte)82, (byte)83, (byte)80, (byte)85, (byte)86, (byte)81 };
-
+		MbusDevice[] devices = {
+			new FinderThreePhasePowerMeter("Total Electricity", (byte)80, 0),
+			new FinderOnePhasePowerMeter("Dryer", (byte)81, 0),
+			new FinderOnePhasePowerMeter("Laundry", (byte)82, 0),
+			new FinderOnePhasePowerMeter("Dishwasher", (byte)83, 0),
+			new FinderOnePhasePowerMeter("Light", (byte)84, 0),
+			new FinderOnePhasePowerMeter("Computer", (byte)85, 0),
+			new FinderOnePhasePowerMeter("Freezer", (byte)86, 0),
+			new FinderOnePhasePowerMeter("Fridge", (byte)87, 0)
+		};
+		
+		
 		int cnt = 0;
 		int errCnt = 0;
 		int successCnt = 0;
 		while (! stopSignal) {
-			System.out.println("--- " + cnt + " - " + successCnt + " - " + errCnt + " ---------------------------------------------------");
 			cnt++;
-			for (byte device : devices) {
-				System.out.println("Querying device " + device);
+			for (MbusDevice device : devices) {
+				System.out.println("Querying " + device.getName() + " meter");
 				try {
-					mbusgw.sendRequest((byte)0x5b, device);
-
+					mbusgw.sendRequest((byte)0x5b, device.getAddress());
 					byte[] frame = mbusgw.collectResponse();
-					
-					MBusMessage mbusMsg = MBusMessage.decode(frame, frame.length);
-					VariableDataStructure variableDataStructure = mbusMsg.getVariableDataResponse();
-					variableDataStructure.decode();
-					List<DataRecord> dataRecords = variableDataStructure.getDataRecords();
+					device.parse(frame);
 
-					for (DataRecord dr : dataRecords) {
-						System.out.println(dr);
-					}
+					System.out.println(device);
 
-					/*
-					for (byte x : frame) {
-						System.out.print(Integer.toHexString(Byte.toUnsignedInt(x)) + " ");
-					}
-					*/
-					System.out.println();
 					successCnt++;
 				} catch (IOException e) {
 					errCnt++;
-					logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device);
+					logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device.shortString());
 				}
 			}
 			// if (cnt >= 10) {
 			//	break;
 			//}
+			System.out.println("--- " + cnt + " - " + successCnt + " - " + errCnt + " ---------------------------------------------------");
 			Thread.sleep(5*1000);
 		}
 

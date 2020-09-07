@@ -2,7 +2,7 @@ package de.hottis.mbusMaster;
 
 import java.io.IOException;
 
-public class MbusgwChildException extends IOException {
+public class MbusgwChildException extends MbusException {
     public MbusgwChildException() {
         super();
     }
