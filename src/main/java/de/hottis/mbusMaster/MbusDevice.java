@@ -66,7 +66,7 @@ abstract public class MbusDevice {
   }
 
   public double getErrorRatio() {
-    return this.errorCnt / this.successCnt;
+    return this.errorCnt / (this.successCnt + this.errorCnt);
   }
 
   public void parse(byte[] frame) throws MbusException {
