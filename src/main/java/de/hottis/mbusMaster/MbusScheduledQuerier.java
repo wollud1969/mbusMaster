@@ -66,8 +66,8 @@ public class MbusScheduledQuerier extends Thread {
             logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device.shortString());
           }
         }
-        logger.info("Cnt: " + cnt + ", SuccessCnt: " + successCnt + ", ErrCnt: " + errCnt);
-        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", cnt, errCnt, successCnt));
+        logger.info("CycleCnt: " + cnt + ", SuccessCnt: " + successCnt + ", ErrCnt: " + errCnt);
+        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", errCnt, successCnt));
         try {
           Thread.sleep(5*1000);
         } catch (InterruptedException e) {

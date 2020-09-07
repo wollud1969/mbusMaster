@@ -16,8 +16,8 @@ public class FinderThreePhasePowerMeter extends MbusDevice {
     this.dataPoints.add(new DataPoint("current3", 13));
     this.dataPoints.add(new DataPoint("activePower3", 14));
     this.dataPoints.add(new DataPoint("reactivePower3", 15));
-    this.dataPoints.add(new DataPoint("activePowerTotal", 16));
-    this.dataPoints.add(new DataPoint("reactivePowerTotal", 17));
+    this.dataPoints.add(new DataPoint("activePowerTotal", 17));
+    this.dataPoints.add(new DataPoint("reactivePowerTotal", 18));
   }
 
   public ADataObject getDataObject() throws MbusException {
