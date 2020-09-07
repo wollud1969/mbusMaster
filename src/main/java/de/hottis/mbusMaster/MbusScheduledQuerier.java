@@ -69,7 +69,7 @@ public class MbusScheduledQuerier extends Thread {
           }
         }
         logger.info("CycleCnt: " + cnt + ", SuccessCnt: " + successCnt + ", ErrCnt: " + errCnt);
-        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", errCnt, successCnt));
+        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", errCnt, successCnt, ((double)errCnt / (double)(errCnt+successCnt))));
         try {
           Thread.sleep(5*1000);
         } catch (InterruptedException e) {
