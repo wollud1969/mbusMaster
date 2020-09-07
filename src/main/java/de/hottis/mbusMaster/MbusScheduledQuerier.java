@@ -58,9 +58,9 @@ public class MbusScheduledQuerier extends Thread {
             device.parse(frame);
 
             logger.info("Got: " + device.toString());
+            device.incSuccessCnt();
             this.queue.add(device.getDataObject());
             
-            device.incSuccessCnt();
             successCnt++;
           } catch (IOException e) {
             device.incErrorCnt();
