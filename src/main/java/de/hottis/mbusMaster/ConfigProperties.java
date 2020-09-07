@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 public class ConfigProperties extends Properties {
 	static final String DEFAULT_PROPS_FILENAME = "mbusMaster.props";
   static final String PROPS_VERBOSE = "verbose";
-  static final String PRPOS_MAINCONFIGFILE = "mainConfigFile";
+  static final String PROPS_MAINCONFIGFILE = "mainConfigFile";
+  static final String PROPS_ERRORRATIOTHRESHOLD = "errorRatioThreshold";
 
   static final Logger logger = LogManager.getRootLogger();
 
@@ -23,7 +24,7 @@ public class ConfigProperties extends Properties {
 
   public ConfigProperties() throws ConfigPropertiesException {
     super();
-    String propsFilename = System.getProperty(PRPOS_MAINCONFIGFILE, DEFAULT_PROPS_FILENAME); 
+    String propsFilename = System.getProperty(PROPS_MAINCONFIGFILE, DEFAULT_PROPS_FILENAME); 
     try {
       try (FileInputStream propsFileInputStream = new FileInputStream(propsFilename)) {
         load(propsFileInputStream);
