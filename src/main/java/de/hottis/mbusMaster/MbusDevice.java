@@ -21,6 +21,9 @@ abstract public class MbusDevice {
   private byte address;
   private int queryPeriod; // in seconds
 
+  private int successCnt;
+  private int errorCnt;
+
   protected List<DataRecord> dataRecords;
   protected boolean validlyParsed;
 
@@ -41,7 +44,29 @@ abstract public class MbusDevice {
     this.address = address;
     this.queryPeriod = queryPeriod;
     this.validlyParsed = false;
+    this.successCnt = 0;
+    this.errorCnt = 0;
     this.dataPoints = new ArrayList<>();
+  }
+
+  public void incSuccessCnt() {
+    this.successCnt++;
+  }
+
+  public void incErrorCnt() {
+    this.errorCnt++;
+  }
+
+  public void resetSuccessCnt() {
+    this.successCnt = 0;
+  }
+
+  public void resetErrorCnt() {
+    this.errorCnt = 0;
+  }
+
+  public double getErrorRatio() {
+    return this.errorCnt / this.successCnt;
   }
 
   public void parse(byte[] frame) throws MbusException {
@@ -82,6 +107,7 @@ abstract public class MbusDevice {
     StringBuffer sb = new StringBuffer();
     sb.append(this.getClass().getName() + " [");
     sb.append("<name=" + this.getName() + "><address=" + this.getAddress() + ">");
+    sb.append("<successCnt=" + this.successCnt + "><errorCnt=" + this.errorCnt + ">");
     if (longOutput && this.validlyParsed) {
       sb.append(this.dataToString());
     }

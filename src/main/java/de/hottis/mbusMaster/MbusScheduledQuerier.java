@@ -60,8 +60,10 @@ public class MbusScheduledQuerier extends Thread {
             logger.info("Got: " + device.toString());
             this.queue.add(device.getDataObject());
             
+            device.incSuccessCnt();
             successCnt++;
           } catch (IOException e) {
+            device.incErrorCnt();
             errCnt++;
             logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device.shortString());
           }
