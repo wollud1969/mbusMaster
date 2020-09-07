@@ -8,6 +8,15 @@ import org.apache.logging.log4j.Logger;
 public class DummyDequeuer extends Thread {
 	static final Logger logger = LogManager.getRootLogger();
 
+  public static final String ANSI_RESET = "\u001B[0m";
+  public static final String ANSI_BLACK = "\u001B[30m";
+  public static final String ANSI_RED = "\u001B[31m";
+  public static final String ANSI_GREEN = "\u001B[32m";
+  public static final String ANSI_YELLOW = "\u001B[33m";
+  public static final String ANSI_BLUE = "\u001B[34m";
+  public static final String ANSI_PURPLE = "\u001B[35m";
+  public static final String ANSI_CYAN = "\u001B[36m";
+  public static final String ANSI_WHITE = "\u001B[37m";
   private BlockingQueue<ADataObject> queue;
 
   public DummyDequeuer(BlockingQueue<ADataObject> queue) {
@@ -20,7 +29,11 @@ public class DummyDequeuer extends Thread {
     while(true) {
       try {
         ADataObject o = this.queue.take();
-        System.out.println("DummyDequeuer: " + o.toString());
+        if (((Double)o.getValues().get("errorRatio")) > 0) {
+          System.out.print(ANSI_RED);
+        }
+        System.out.print("DummyDequeuer: " + o.toString());
+        System.out.println(ANSI_RESET);
       } catch (InterruptedException e) {
       }
     }
