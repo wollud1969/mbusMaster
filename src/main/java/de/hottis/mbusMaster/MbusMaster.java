@@ -7,6 +7,9 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.openmuc.jmbus.DataRecord;
+import org.openmuc.jmbus.MBusMessage;
+import org.openmuc.jmbus.VariableDataStructure;
 
 public class MbusMaster {
 	static final String PROPS_FILENAME = "mbusMaster.props";
@@ -48,9 +51,21 @@ public class MbusMaster {
 					mbusgw.sendRequest((byte)0x5b, device);
 
 					byte[] frame = mbusgw.collectResponse();
+					
+					MBusMessage mbusMsg = MBusMessage.decode(frame, frame.length);
+					VariableDataStructure variableDataStructure = mbusMsg.getVariableDataResponse();
+					variableDataStructure.decode();
+					List<DataRecord> dataRecords = variableDataStructure.getDataRecords();
+
+					for (DataRecord dr : dataRecords) {
+						System.out.println(dr);
+					}
+
+					/*
 					for (byte x : frame) {
 						System.out.print(Integer.toHexString(Byte.toUnsignedInt(x)) + " ");
 					}
+					*/
 					System.out.println();
 					successCnt++;
 				} catch (IOException e) {
