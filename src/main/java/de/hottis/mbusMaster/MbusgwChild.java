@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,17 +15,19 @@ import org.apache.logging.log4j.Logger;
 
 public class MbusgwChild {
 	static final Logger logger = LogManager.getRootLogger();
+	static final String PROPS_VERBOSE = "verbose";
 
-
+  private ConfigProperties config;
   private Process mbusgwProcess;
   private InputStream processInput;
   private OutputStream processOutput;
   private boolean verbose;
   private Thread stderrToLog;
+  
 
-
-  public MbusgwChild(boolean verbose) {
-    this.verbose = verbose;
+  public MbusgwChild(ConfigProperties config) {
+    this.config = config;
+    this.verbose = this.config.isVerbose();
   }
 	
 	public void start() throws IOException {
