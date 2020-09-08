@@ -29,7 +29,10 @@ public class DummyDequeuer extends Thread {
     while(true) {
       try {
         ADataObject o = this.queue.take();
-        if (((Double)o.getValues().get("errorRatio")) > 0) {
+        if (((Double)o.getValues().get("errorRatio")) == 0.0) {
+          System.out.print(ANSI_GREEN);
+        }
+        if (((Double)o.getValues().get("errorRatio")) > 0.25) {
           System.out.print(ANSI_RED);
         }
         System.out.print("DummyDequeuer: " + o.toString());
