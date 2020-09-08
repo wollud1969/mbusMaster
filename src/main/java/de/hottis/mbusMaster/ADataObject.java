@@ -31,7 +31,11 @@ public abstract class ADataObject implements Serializable {
 	public Map<String, Object> getValues() {
 		return values;
 	}
-	
+    
+    public boolean hasKey(String k) {
+        return this.values.containsKey(k);
+    }
+
 	public String getName() {
 		return name;
 	}
@@ -54,11 +58,11 @@ public abstract class ADataObject implements Serializable {
                     sb.append(entry.getKey());
                     sb.append("\":");
                     Object value = entry.getValue();
-                    if (! (value instanceof Double)) {
+                    if (! ((value instanceof Double) || (value instanceof Integer))) {
                         sb.append("\"");
                     }
                     sb.append(value);
-                    if (! (value instanceof Double)) {
+                    if (! ((value instanceof Double) || (value instanceof Integer))) {
                         sb.append("\"");
                     }
                 }

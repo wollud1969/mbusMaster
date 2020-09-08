@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class DummyDequeuer extends Thread {
+  static final String ERROR_RATIO_KEY = "errorRatio";
+
 	static final Logger logger = LogManager.getRootLogger();
 
   public static final String ANSI_RESET = "\u001B[0m";
@@ -29,10 +31,10 @@ public class DummyDequeuer extends Thread {
     while(true) {
       try {
         ADataObject o = this.queue.take();
-        if (((Double)o.getValues().get("errorRatio")) == 0.0) {
+        if (o.hasKey(ERROR_RATIO_KEY) && ((Double)o.getValues().get(ERROR_RATIO_KEY)) < 0.001) {
           System.out.print(ANSI_GREEN);
         }
-        if (((Double)o.getValues().get("errorRatio")) > 0.25) {
+        if (o.hasKey(ERROR_RATIO_KEY) && ((Double)o.getValues().get(ERROR_RATIO_KEY)) > 0.25) {
           System.out.print(ANSI_RED);
         }
         System.out.print("DummyDequeuer: " + o.toString());

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 public class MbusScheduledQuerier extends Thread {
   static final double DEFAULT_ERRORRATIOTHRESHOLD = 0.5;
+  static final int DEFAULT_ERRORRATIOCHECKTHRESHOLD = 100;
+  static final int DEFAULT_LOOPSHUTDOWNDELAY = 300; // seconds
 
   static final Logger logger = LogManager.getRootLogger();
 
@@ -42,6 +44,10 @@ public class MbusScheduledQuerier extends Thread {
     this.stopSignal = true;
   }
 
+  private int getCurrentTime() {
+    return (int) (System.currentTimeMillis() / 1000);
+  }
+
   public void run() {
     try {
       MbusgwChild mbusgw = new MbusgwChild(config);
@@ -51,13 +57,16 @@ public class MbusScheduledQuerier extends Thread {
       int errCnt = 0;
       int successCnt = 0;
       int shutdownCnt = 0;
-      double maxErrorRatio = 0;
+      int lastShutdown = this.getCurrentTime();
       int timeSinceLastLoopShutdown = 0;
+      int shutdownTimeSum = 0;
       int meantimeBetweenLoopShutdowns = 0;
     
 
       while (! this.stopSignal) {
         cnt++;
+        double maxErrorRatio = 0;
+
         for (MbusDevice device : this.devices) {
           logger.info("Querying " + device.getName() + " meter");
           try {
@@ -75,12 +84,23 @@ public class MbusScheduledQuerier extends Thread {
             errCnt++;
             logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device.shortString());
           }
-          this.maxErrorRatio = (this.maxErrorRatio > device.getErrorRatio()) ? this.maxErrorRatio : device.getErrorRatio();
+          maxErrorRatio = (maxErrorRatio > device.getErrorRatio()) ? maxErrorRatio : device.getErrorRatio();
         }
+        
+        logger.info("CycleCnt: " + cnt + ", SuccessCnt: " + successCnt + ", ErrCnt: " + errCnt + 
+                    ", MaxErrorRatio: " + maxErrorRatio + ", MeanErrorRatio: " + ((double)errCnt / (double)(errCnt+successCnt)) +
+                    ", ShutdownCnt: " + shutdownCnt +
+                    ", TimeSinceLastLoopShutdown: " + timeSinceLastLoopShutdown + ", MeantimeBetweenLoopShutdowns: " + meantimeBetweenLoopShutdowns);
+        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", cnt, errCnt, successCnt, shutdownCnt,
+                                                    maxErrorRatio, ((double)errCnt / (double)(errCnt+successCnt)),
+                                                    timeSinceLastLoopShutdown, meantimeBetweenLoopShutdowns));
 
-        if (this.maxErrorRatio > config.getDoubleProperties(ConfigProperties.PROPS_ERRORRATIOTHRESHOLD, DEFAULT_ERRORRATIOTHRESHOLD)) {
+        if ((maxErrorRatio > config.getDoubleProperty(ConfigProperties.PROPS_ERRORRATIOTHRESHOLD, DEFAULT_ERRORRATIOTHRESHOLD)) &&
+            (cnt % config.getIntProperty(ConfigProperties.PROPS_ERRORRATIOCHECKTHRESHOLD, DEFAULT_ERRORRATIOCHECKTHRESHOLD) == 0)) {
+          logger.error("maxErrorRatio exceeds threshold and cycleCnt exceeds checkThreshold, request loop shutdown");
+
           // disable loop
-          shutdownCnt++;
+          mbusgw.loopShutdown();
 
           // reset counters in devices
           for (MbusDevice device : this.devices) {
@@ -89,17 +109,26 @@ public class MbusScheduledQuerier extends Thread {
           // reset local counters
           errCnt = 0;
           successCnt = 0;
+          shutdownCnt++;
 
           // remember time of loop shutdown
           // calculate time since last shutdown
           // calculate mean time between shutdowns
+          int currentTime = this.getCurrentTime();
+          timeSinceLastLoopShutdown = currentTime - lastShutdown;
+          lastShutdown = currentTime;
+          shutdownTimeSum += timeSinceLastLoopShutdown;
+          meantimeBetweenLoopShutdowns = shutdownTimeSum / shutdownCnt;
+
+          // delay
+          int delay = config.getIntProperty(ConfigProperties.PROPS_LOOPSHUTDOWNDELAY, DEFAULT_LOOPSHUTDOWNDELAY);
+          logger.error("delaying for " + delay + "s");
+          try {
+            Thread.sleep(delay * 1000);
+          } catch (InterruptedException e) {
+          }
         }
 
-        
-        logger.info("CycleCnt: " + cnt + ", SuccessCnt: " + successCnt + ", ErrCnt: " + errCnt);
-        this.queue.add(new MbusStatisticsDataObject("MbusgwChild", errCnt, successCnt, shutdownCnt,
-                                                    ((double)errCnt / (double)(errCnt+successCnt))),
-                                                    timeSinceLastLoopShutdown, meantimeBetweenLoopShutdowns);
 
         try {
           Thread.sleep(5*1000);
