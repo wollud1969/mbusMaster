@@ -37,6 +37,9 @@ public class DummyDequeuer extends Thread {
         if (o.hasKey(ERROR_RATIO_KEY) && ((Double)o.getValues().get(ERROR_RATIO_KEY)) > 0.25) {
           System.out.print(ANSI_RED);
         }
+        if ("Statistics".equals(o.getKind())) {
+          System.out.print(ANSI_BLUE);
+        }
         System.out.print("DummyDequeuer: " + o.toString());
         System.out.println(ANSI_RESET);
       } catch (InterruptedException e) {
