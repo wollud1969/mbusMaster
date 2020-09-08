@@ -3,8 +3,12 @@ package de.hottis.mbusMaster;
 
 import java.io.IOException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
+import java.util.Enumeration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,14 +34,43 @@ public class MbusScheduledQuerier extends Thread {
     this.queue = queue;
   
     this.devices = new ArrayList<>();
-		this.devices.add(new FinderThreePhasePowerMeter("Total Electricity", (byte)80, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Dryer", (byte)81, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Laundry", (byte)82, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Dishwasher", (byte)83, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Light", (byte)84, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Computer", (byte)85, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Freezer", (byte)86, 0));
-		this.devices.add(new FinderOnePhasePowerMeter("Fridge", (byte)87, 0));
+  }
+
+  public void loadDevices() throws MbusException {
+    String deviceClassName = null;
+    try {
+      @SuppressWarnings("unchecked")
+      Enumeration<String> propNames = (Enumeration<String>) config.propertyNames();
+      while (propNames.hasMoreElements()) {
+        String propName = propNames.nextElement();
+        if (propName.startsWith(ConfigProperties.PROPS_DEVICES)) {
+          String[] devicesConfigElements = config.getProperty(propName).split(",");
+          String name = devicesConfigElements[0];
+          byte addr = Byte.parseByte(devicesConfigElements[1]);
+          deviceClassName = devicesConfigElements[2];
+          int period = Integer.parseInt(devicesConfigElements[3]);
+
+          Class<?> klass = Class.forName(deviceClassName);
+          Constructor<?> constructor = klass.getConstructor(String.class, Byte.class, Integer.class);
+          MbusDevice device = (MbusDevice) constructor.newInstance(name, addr, period);
+          
+          this.devices.add(device);
+          logger.info("Device " + name + " with class " + deviceClassName + ", address " + addr + ", period " + period + " loaded");
+        }
+      }
+    } catch (ClassNotFoundException e) {
+      String msg = "Device class " + deviceClassName + " not found when loading devices";
+      logger.error(msg);
+      throw new MbusException(msg, e);
+    } catch (NoSuchMethodException e) {
+      String msg = "Required constructor in device class " + deviceClassName + " not found when loading devices";
+      logger.error(msg);
+      throw new MbusException(msg, e);
+    } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+      String msg = "Error when instantiating device class " + deviceClassName + " when loading devices";
+      logger.error(msg);
+      throw new MbusException(msg, e);
+    }
   }
 
   public void setStopSignal() {

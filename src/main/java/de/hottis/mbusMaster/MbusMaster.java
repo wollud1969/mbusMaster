@@ -34,6 +34,7 @@ public class MbusMaster {
 
 
 		MbusScheduledQuerier querier = new MbusScheduledQuerier(config, queue);
+		querier.loadDevices();
 		querier.start();
 
 		DummyDequeuer ddq = new DummyDequeuer(queue);

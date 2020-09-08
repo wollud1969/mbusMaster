@@ -18,6 +18,7 @@ public class ConfigProperties extends Properties {
   static final String PROPS_ERRORRATIOTHRESHOLD = "errorRatioThreshold";
   static final String PROPS_ERRORRATIOCHECKTHRESHOLD = "errorRatioCheckThreshold";
   static final String PROPS_LOOPSHUTDOWNDELAY = "loopShutdownDelay";
+	static final String PROPS_DEVICES = "mbus.device";
 
   static final Logger logger = LogManager.getRootLogger();
 
