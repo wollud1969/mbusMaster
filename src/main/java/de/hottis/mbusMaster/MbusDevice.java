@@ -57,11 +57,8 @@ abstract public class MbusDevice {
     this.errorCnt++;
   }
 
-  public void resetSuccessCnt() {
+  public void resetCounter() {
     this.successCnt = 0;
-  }
-
-  public void resetErrorCnt() {
     this.errorCnt = 0;
   }
 
