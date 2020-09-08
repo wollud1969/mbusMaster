@@ -38,7 +38,7 @@ public class DummyDequeuer extends Thread {
           System.out.print(ANSI_RED);
         }
         if ("Statistics".equals(o.getKind())) {
-          System.out.print(ANSI_BLUE);
+          System.out.print(ANSI_CYAN);
         }
         System.out.print("DummyDequeuer: " + o.toString());
         System.out.println(ANSI_RESET);
