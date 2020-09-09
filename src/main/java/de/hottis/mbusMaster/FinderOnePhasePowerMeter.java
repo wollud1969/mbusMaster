@@ -1,6 +1,13 @@
 package de.hottis.mbusMaster;
 
+
+
 public class FinderOnePhasePowerMeter extends MbusDevice {
+
+  public FinderOnePhasePowerMeter(String name, Byte address, Integer queryPeriod) {
+    this(name, address.byteValue(), queryPeriod.intValue());
+  }
+
   public FinderOnePhasePowerMeter(String name, byte address, int queryPeriod) {
     super(name, address, queryPeriod);
     this.dataPoints.add(new DataPoint("energy", 0));

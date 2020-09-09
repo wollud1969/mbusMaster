@@ -16,6 +16,9 @@ public class ConfigProperties extends Properties {
   static final String PROPS_VERBOSE = "verbose";
   static final String PROPS_MAINCONFIGFILE = "mainConfigFile";
   static final String PROPS_ERRORRATIOTHRESHOLD = "errorRatioThreshold";
+  static final String PROPS_ERRORRATIOCHECKTHRESHOLD = "errorRatioCheckThreshold";
+  static final String PROPS_LOOPSHUTDOWNDELAY = "loopShutdownDelay";
+	static final String PROPS_DEVICES = "mbus.device";
 
   static final Logger logger = LogManager.getRootLogger();
 
@@ -79,5 +82,46 @@ public class ConfigProperties extends Properties {
 
   public boolean isVerbose() {
     return this.getBooleanProperty("verbose", false) || this.overwriteVerbose;
+  }
+
+  
+  public double getDoubleProperty(String key) throws ConfigPropertiesException {
+    String v = this.getStringProperty(key);
+    try {
+      double o = Double.parseDouble(v);
+      return o;
+    } catch (NullPointerException | NumberFormatException e) {
+      throw new ConfigPropertiesException("Error in getDoubleProperty", e);
+    }
+  }
+
+  public double getDoubleProperty(String key, double def) {
+    double returnValue;
+    try {
+      returnValue = this.getDoubleProperty(key);
+    } catch (ConfigPropertiesException e) {
+      returnValue = def;
+    }
+    return returnValue;
+  }
+
+  public int getIntProperty(String key) throws ConfigPropertiesException {
+    String v = this.getStringProperty(key);
+    try {
+      int o = Integer.parseInt(v);
+      return o;
+    } catch (NullPointerException | NumberFormatException e) {
+      throw new ConfigPropertiesException("Error in getIntProperty", e);
+    }
+  }
+
+  public int getIntProperty(String key, int def) {
+    int returnValue;
+    try {
+      returnValue = this.getIntProperty(key);
+    } catch (ConfigPropertiesException e) {
+      returnValue = def;
+    }
+    return returnValue;
   }
 }

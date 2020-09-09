@@ -77,6 +77,11 @@ public class MbusgwChild {
     logger.info("Thread joined");
   }
 
+  public void loopShutdown() throws IOException {
+    logger.info("Requesting loop shutdown");
+    this.sendRequest((byte)0, (byte)1);
+  }
+
   public InputStream getProcessInputStream() {
     return this.processInput;
   }

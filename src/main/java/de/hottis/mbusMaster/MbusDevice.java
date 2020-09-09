@@ -39,6 +39,10 @@ abstract public class MbusDevice {
 
   protected ArrayList<DataPoint> dataPoints;
 
+  protected MbusDevice(String name, Byte address, Integer queryPeriod) {
+    this(name, address.byteValue(), queryPeriod.intValue());
+  }
+
   protected MbusDevice(String name, byte address, int queryPeriod) {
     this.name = name;
     this.address = address;
