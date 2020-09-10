@@ -37,12 +37,16 @@ public class MbusMaster {
 		querier.loadDevices();
 		querier.start();
 
-		DummyDequeuer ddq = new DummyDequeuer(queue);
-		ddq.start();
+		// DummyDequeuer ddq = new DummyDequeuer(config, queue);
+		// ddq.start();
 
+		MQTTDequeuer mqttDequeuer = new MQTTDequeuer(config, queue);
+		mqttDequeuer.initMqttClient();
+		mqttDequeuer.start();
 
 		querier.join();
-		ddq.join();
+		// ddq.join();
+		mqttDequeuer.join();
 		logger.info("MbusMaster terminating");
 
 	}		

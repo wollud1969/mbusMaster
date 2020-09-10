@@ -19,6 +19,11 @@ public class ConfigProperties extends Properties {
   static final String PROPS_ERRORRATIOCHECKTHRESHOLD = "errorRatioCheckThreshold";
   static final String PROPS_LOOPSHUTDOWNDELAY = "loopShutdownDelay";
 	static final String PROPS_DEVICES = "mbus.device";
+	static final String PROPS_MQTT_BROKER = "mqtt.broker";
+	static final String PROPS_MQTT_CLIENTID = "mqtt.clientid";
+	static final String PROPS_MQTT_USERNAME = "mqtt.username";
+	static final String PROPS_MQTT_PASSWORD = "mqtt.password";
+  static final String PROPS_MQTT_OUT_TOPIC = "mqtt.topic.out";
 
   static final Logger logger = LogManager.getRootLogger();
 
