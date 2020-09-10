@@ -1,5 +1,5 @@
 [Unit]
-Description=mqttMBusConverter
+Description=mbusmaster
 Wants=network-online.target
 After=network-online.target
 
@@ -7,12 +7,14 @@ After=network-online.target
 [Service]
 Type=simple
 GuessMainPID=yes
-ExecStart=/usr/bin/java -jar mqttMBusConverter-1.0-SNAPSHOT-jar-with-dependencies.jar
+ExecStart=/usr/bin/java  -Dlog4j.configurationFile=log4j2.xml -DmainConfigFile=mbusMaster.props -jar mbusMaster-1.0-SNAPSHOT-jar-with-dependencies.jar
 ExecStop=kill -SIGINT $mainpid
 Restart=on-failure
-WorkingDirectory=/opt/services/mqttMBusConverter
+WorkingDirectory=/opt/mbusMaster
+User=pi
+
 
 [Install]
-Alias=mqttmbusconverter
+Alias=mbusmaster
 WantedBy=multi-user.target
 
