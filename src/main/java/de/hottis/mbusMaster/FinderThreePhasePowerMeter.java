@@ -26,6 +26,8 @@ public class FinderThreePhasePowerMeter extends MbusDevice {
   }
 
   public ADataObject getDataObject() throws MbusException {
-    return new ElectricEnergyDataObject(this.getName(), this.getValue("energy"), this.getValue("activePowerTotal"), this.getErrorRatio());
+    return new ElectricEnergyDataObject(this.getName(), this.getStatus(), this.getStatusText(),
+                                        this.getValue("energy"), this.getValue("activePowerTotal"), 
+                                        this.getErrorRatio());
   }
 }

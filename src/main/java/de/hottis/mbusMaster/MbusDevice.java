@@ -23,8 +23,10 @@ abstract public class MbusDevice {
 
   private int successCnt;
   private int errorCnt;
+  private String errorStatus = null;
 
-  protected List<DataRecord> dataRecords;
+  protected List<DataRecord> dataRecords = null;
+  protected ArrayList<DataRecord> lastDataRecords;
   protected boolean validlyParsed;
 
   static protected class DataPoint {
@@ -70,6 +72,42 @@ abstract public class MbusDevice {
     return (double)this.errorCnt / (double)(this.successCnt + this.errorCnt);
   }
 
+  public void setErrorStatus(String errorStatus) {
+    this.errorStatus = errorStatus;
+  }
+
+  public String getStatus() {
+    String status = "?";
+    if (this.validlyParsed) {
+      status = "good";
+    } else {
+      status = "bad";
+    }
+    return status;
+  }
+
+  public String getStatusText() {
+    String status = "?";
+    if (this.validlyParsed) {
+      status = "-";
+    } else {
+      if (this.errorStatus == null) {
+        status = "unknown cause";
+      } else {
+        status = this.errorStatus;
+      }
+    }
+    return status;
+  }
+
+  public void preParse() {
+    if (this.dataRecords != null) {
+      this.lastDataRecords = new ArrayList<>(this.dataRecords);
+    }
+    this.errorStatus = null;
+    this.validlyParsed = false;
+  }
+
   public void parse(byte[] frame) throws MbusException {
     try {
       MBusMessage mbusMsg = MBusMessage.decode(frame, frame.length);
@@ -109,6 +147,7 @@ abstract public class MbusDevice {
     sb.append(this.getClass().getName() + " [");
     sb.append("<name=" + this.getName() + "><address=" + this.getAddress() + ">");
     sb.append("<successCnt=" + this.successCnt + "><errorCnt=" + this.errorCnt + ">");
+    sb.append("<status=" + this.getStatus() + "><statusText>=" + this.getStatusText() + ">");
     if (longOutput && this.validlyParsed) {
       sb.append(this.dataToString());
     }
@@ -125,12 +164,16 @@ abstract public class MbusDevice {
   }
 
   public double getValue(String dataPointName) throws MbusException {
-    if (! validlyParsed) {
-      throw new MbusException("trying to get value before valid parsing");
-    }
     for (DataPoint dp : this.dataPoints) {
       if (dataPointName.equals(dp.name)) {
-        return this.dataRecords.get(dp.index).getScaledDataValue();
+        if (validlyParsed) {
+          return this.dataRecords.get(dp.index).getScaledDataValue();
+        } else {
+          if (this.lastDataRecords == null) {
+            throw new MbusException("trying to get value before any valid parsing");
+          }
+          return this.lastDataRecords.get(dp.index).getScaledDataValue();
+        }
       }
     }
     throw new MbusException("dataPoint " + dataPointName + " in getValue not found");

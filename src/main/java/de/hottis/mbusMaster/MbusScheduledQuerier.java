@@ -103,19 +103,24 @@ public class MbusScheduledQuerier extends Thread {
         for (MbusDevice device : this.devices) {
           logger.info("Querying " + device.getName() + " meter");
           try {
+            device.preParse();
             mbusgw.sendRequest((byte)0x5b, device.getAddress());
             byte[] frame = mbusgw.collectResponse();
             device.parse(frame);
 
             logger.info("Got: " + device.toString());
             device.incSuccessCnt();
-            this.queue.add(device.getDataObject());
             
             successCnt++;
           } catch (IOException e) {
             device.incErrorCnt();
-            errCnt++;
+            device.setErrorStatus(e.toString());
+
             logger.error("Error " + e.toString() + " in Meterbus dialog for device " + device.shortString());
+
+            errCnt++;
+          } finally {
+            this.queue.add(device.getDataObject());
           }
           maxErrorRatio = (maxErrorRatio > device.getErrorRatio()) ? maxErrorRatio : device.getErrorRatio();
         }

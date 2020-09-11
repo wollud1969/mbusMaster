@@ -17,7 +17,7 @@ public class MbusStatisticsDataObject extends ADataObject {
 	
 	public MbusStatisticsDataObject(String name, int cycle, int error, int success, int shutdowns,
 	                                double maxErrorRatio, double meanErrorRatio, int timeSinceLastShutdown, int meantimeBetweenShutdowns) {
-		super(name, KIND_NAME);
+		super(name, KIND_NAME, "good", "-");
 		HashMap<String, Object> values = new HashMap<String, Object>();
 		values.put(CYCLE_CNT_KEY, cycle);
 		values.put(ERROR_CNT_KEY, error);

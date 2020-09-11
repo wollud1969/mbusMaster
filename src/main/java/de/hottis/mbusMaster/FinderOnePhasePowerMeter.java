@@ -18,6 +18,8 @@ public class FinderOnePhasePowerMeter extends MbusDevice {
   }
 
   public ADataObject getDataObject() throws MbusException {
-    return new ElectricEnergyDataObject(this.getName(), this.getValue("energy"), this.getValue("activePower"), this.getErrorRatio());
+    return new ElectricEnergyDataObject(this.getName(), this.getStatus(), this.getStatusText(),
+                                        this.getValue("energy"), this.getValue("activePower"), 
+                                        this.getErrorRatio());
   }
 }

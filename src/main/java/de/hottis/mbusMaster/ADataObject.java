@@ -16,10 +16,14 @@ public abstract class ADataObject implements Serializable {
 	private String name;
 	private Map<String, Object> values;
     private String kind;
+    private String status;
+    private String statusText;
 	
-	public ADataObject(String name, String kind) {
+	public ADataObject(String name, String kind, String status, String statusText) {
 		this.name = name;
         this.kind = kind;
+        this.status = status;
+        this.statusText = statusText;
 	}
 
 	public void setValues(Map<String, Object> values) {
@@ -44,12 +48,24 @@ public abstract class ADataObject implements Serializable {
         return this.kind;
     }
 
+    public String getStatus() {
+        return this.status;
+    }
+
+    public String getStatusText() {
+        return this.statusText;
+    }
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
                 sb.append("{\"name\":\"");
-                sb.append(name);
+                sb.append(this.name);
                 sb.append("\", \"kind\":\"");
-                sb.append(kind);
+                sb.append(this.kind);
+                sb.append("\", \"status\":\"");
+                sb.append(this.status);
+                sb.append("\", \"statusText\":\"");
+                sb.append(this.statusText);
                 sb.append("\", \"values\":{");
                 boolean first = true;
                 for (Map.Entry<String, Object> entry : values.entrySet()) {

@@ -10,8 +10,8 @@ public class ElectricEnergyDataObject extends ADataObject {
 	static final String TABLE_NAME = "ElectricEnergy";
   static final String KIND_NAME = "ElectricEnergy";
 	
-	public ElectricEnergyDataObject(String name, double energy, double power, double errorRatio) {
-		super(name, KIND_NAME);
+	public ElectricEnergyDataObject(String name, String status, String statusText, double energy, double power, double errorRatio) {
+		super(name, KIND_NAME, status, statusText);
 		HashMap<String, Object> values = new HashMap<String, Object>();
 		values.put(ENERGY_KEY, energy);
 		values.put(POWER_KEY, power);
