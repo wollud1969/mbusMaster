@@ -1,1 +1,17 @@
+errorRatioThreshold = 0.5
+errorRatioCheckThreshold = 100
+loopShutdownDelay = 120
+
+mbus.device.1 = Total,80,de.hottis.mbusMaster.FinderThreePhasePowerMeter,60
+mbus.device.2 = Dryer,81,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.3 = Laundry,82,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.4 = Dishwasher,83,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.5 = Light,84,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.6 = Computer,85,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.7 = Freezer,86,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+mbus.device.8 = Fridge,87,de.hottis.mbusMaster.FinderOnePhasePowerMeter,60
+
 mqtt.broker = tcp://172.16.2.16
+
+verbose = false
+
